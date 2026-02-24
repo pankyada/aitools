@@ -1,0 +1,23 @@
+[build-system]
+requires = ["hatchling>=1.25.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ait-core"
+version = "0.1.0"
+description = "Shared auth/config/output utilities for AI toolset"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+dependencies = [
+  "cryptography>=44.0.0",
+  "httpx>=0.28.1",
+  "pydantic>=2.10.6",
+  "tomli-w>=1.2.0",
+  "typer>=0.15.2",
+  "rich>=13.9.4",
+  "structlog>=25.2.0",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ait_core"]

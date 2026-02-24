@@ -1,0 +1,83 @@
+[build-system]
+requires = ["hatchling>=1.25.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ai-toolset"
+version = "0.1.0"
+description = "Modular AI-first CLI toolset for Gmail, Google Drive, xAI, and local memory"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [
+  { name = "AI Toolset Contributors" }
+]
+dependencies = [
+  "ait-core>=0.1.0",
+  "ait-gmail>=0.1.0",
+  "ait-gdrive>=0.1.0",
+  "ait-xai>=0.1.0",
+  "ait-memory>=0.1.0",
+]
+
+[tool.uv.workspace]
+members = [
+  "packages/ait-core",
+  "packages/ait-gmail",
+  "packages/ait-gdrive",
+  "packages/ait-xai",
+  "packages/ait-memory",
+]
+
+[tool.uv.sources]
+ait-core = { workspace = true }
+ait-gmail = { workspace = true }
+ait-gdrive = { workspace = true }
+ait-xai = { workspace = true }
+ait-memory = { workspace = true }
+
+[dependency-groups]
+dev = [
+  "pytest>=8.3.5",
+  "pytest-asyncio>=0.24.0",
+  "pytest-cov>=6.0.0",
+  "pytest-timeout>=2.3.1",
+  "respx>=0.21.1",
+  "mypy>=1.15.0",
+  "ruff>=0.11.0",
+  "types-requests>=2.32.0.20241016",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "C4", "SIM", "N", "ARG", "RET"]
+ignore = ["B008", "E501", "RET504"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-x --timeout=30"
+asyncio_mode = "auto"
+
+[tool.mypy]
+python_version = "3.11"
+warn_unused_configs = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_return_any = true
+strict = false
+ignore_missing_imports = true
+packages = ["ait_core", "ait_xai", "ait_gmail", "ait_gdrive", "ait_memory"]
+
+[[tool.mypy.overrides]]
+module = ["ait_core.*"]
+strict = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ai_toolset"]

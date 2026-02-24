@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Install dependencies
+        run: uv sync --all-packages
+
+      - name: Ruff lint
+        run: uv run ruff check .
+
+      - name: Ruff format check
+        run: uv run ruff format --check .
+
+      - name: Tests
+        run: uv run pytest tests/ --cov=packages/ait-core/src/ait_core --cov-fail-under=80
+
+      - name: Mypy
+        run: uv run mypy packages/ait-core/src/ait_core packages/ait-xai/src/ait_xai packages/ait-gmail/src/ait_gmail packages/ait-gdrive/src/ait_gdrive packages/ait-memory/src/ait_memory
