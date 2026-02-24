@@ -11,7 +11,7 @@ usage() {
 Usage: install.sh [--version vX.Y.Z] [--prefix /path] tool [tool...]
 
 Tools:
-  gmail gdrive xai memory
+  gmail gdrive gcal xai memory resend sendgrid
 USAGE
 }
 
@@ -63,8 +63,11 @@ for tool in "${TOOLS[@]}"; do
   case "$tool" in
     gmail) binary="ait-gmail" ;;
     gdrive) binary="ait-gdrive" ;;
+    gcal) binary="ait-gcal" ;;
     xai) binary="ait-xai" ;;
     memory) binary="ait-memory" ;;
+    resend) binary="ait-resend" ;;
+    sendgrid) binary="ait-sendgrid" ;;
     *) echo "Unknown tool: $tool"; exit 1 ;;
   esac
 

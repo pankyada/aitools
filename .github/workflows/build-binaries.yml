@@ -10,7 +10,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        package: [ait-gmail, ait-gdrive, ait-xai, ait-memory]
+        package: [ait-gmail, ait-gdrive, ait-gcal, ait-xai, ait-memory, ait-resend, ait-sendgrid]
 
     steps:
       - name: Checkout

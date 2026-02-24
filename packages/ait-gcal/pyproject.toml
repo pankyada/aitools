@@ -1,0 +1,24 @@
+[build-system]
+requires = ["hatchling>=1.25.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ait-gcal"
+version = "0.1.0"
+description = "Google Calendar CLI tools"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+dependencies = [
+  "ait-core>=0.1.0",
+  "httpx>=0.28.1",
+  "pydantic>=2.10.6",
+  "typer>=0.15.2",
+  "rich>=13.9.4",
+]
+
+[project.scripts]
+ait-gcal = "ait_gcal.cli:app"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ait_gcal"]

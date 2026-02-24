@@ -10,9 +10,12 @@ resolution-markers = [
 members = [
     "ai-toolset",
     "ait-core",
+    "ait-gcal",
     "ait-gdrive",
     "ait-gmail",
     "ait-memory",
+    "ait-resend",
+    "ait-sendgrid",
     "ait-xai",
 ]
 
@@ -22,9 +25,12 @@ version = "0.1.0"
 source = { editable = "." }
 dependencies = [
     { name = "ait-core" },
+    { name = "ait-gcal" },
     { name = "ait-gdrive" },
     { name = "ait-gmail" },
     { name = "ait-memory" },
+    { name = "ait-resend" },
+    { name = "ait-sendgrid" },
     { name = "ait-xai" },
 ]
 
@@ -43,9 +49,12 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "ait-core", editable = "packages/ait-core" },
+    { name = "ait-gcal", editable = "packages/ait-gcal" },
     { name = "ait-gdrive", editable = "packages/ait-gdrive" },
     { name = "ait-gmail", editable = "packages/ait-gmail" },
     { name = "ait-memory", editable = "packages/ait-memory" },
+    { name = "ait-resend", editable = "packages/ait-resend" },
+    { name = "ait-sendgrid", editable = "packages/ait-sendgrid" },
     { name = "ait-xai", editable = "packages/ait-xai" },
 ]
 
@@ -83,6 +92,27 @@ requires-dist = [
     { name = "rich", specifier = ">=13.9.4" },
     { name = "structlog", specifier = ">=25.2.0" },
     { name = "tomli-w", specifier = ">=1.2.0" },
+    { name = "typer", specifier = ">=0.15.2" },
+]
+
+[[package]]
+name = "ait-gcal"
+version = "0.1.0"
+source = { editable = "packages/ait-gcal" }
+dependencies = [
+    { name = "ait-core" },
+    { name = "httpx" },
+    { name = "pydantic" },
+    { name = "rich" },
+    { name = "typer" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "ait-core", editable = "packages/ait-core" },
+    { name = "httpx", specifier = ">=0.28.1" },
+    { name = "pydantic", specifier = ">=2.10.6" },
+    { name = "rich", specifier = ">=13.9.4" },
     { name = "typer", specifier = ">=0.15.2" },
 ]
 
@@ -155,6 +185,48 @@ requires-dist = [
     { name = "ulid-py", specifier = ">=1.1.0" },
 ]
 provides-extras = ["local-embeddings"]
+
+[[package]]
+name = "ait-resend"
+version = "0.1.0"
+source = { editable = "packages/ait-resend" }
+dependencies = [
+    { name = "ait-core" },
+    { name = "httpx" },
+    { name = "pydantic" },
+    { name = "rich" },
+    { name = "typer" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "ait-core", editable = "packages/ait-core" },
+    { name = "httpx", specifier = ">=0.28.1" },
+    { name = "pydantic", specifier = ">=2.10.6" },
+    { name = "rich", specifier = ">=13.9.4" },
+    { name = "typer", specifier = ">=0.15.2" },
+]
+
+[[package]]
+name = "ait-sendgrid"
+version = "0.1.0"
+source = { editable = "packages/ait-sendgrid" }
+dependencies = [
+    { name = "ait-core" },
+    { name = "httpx" },
+    { name = "pydantic" },
+    { name = "rich" },
+    { name = "typer" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "ait-core", editable = "packages/ait-core" },
+    { name = "httpx", specifier = ">=0.28.1" },
+    { name = "pydantic", specifier = ">=2.10.6" },
+    { name = "rich", specifier = ">=13.9.4" },
+    { name = "typer", specifier = ">=0.15.2" },
+]
 
 [[package]]
 name = "ait-xai"

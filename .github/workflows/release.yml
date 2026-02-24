@@ -25,7 +25,7 @@ jobs:
       - name: Build distributions
         run: |
           uv build
-          for pkg in packages/ait-core packages/ait-xai packages/ait-gmail packages/ait-gdrive packages/ait-memory; do
+          for pkg in packages/ait-core packages/ait-xai packages/ait-gmail packages/ait-gdrive packages/ait-gcal packages/ait-memory packages/ait-resend packages/ait-sendgrid; do
             (cd "$pkg" && uv build)
           done
 

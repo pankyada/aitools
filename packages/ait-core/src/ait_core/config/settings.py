@@ -33,6 +33,20 @@ class XAISettings(BaseModel):
     image_model: str = "grok-2-image"
 
 
+class ResendSettings(BaseModel):
+    """Resend API settings."""
+
+    api_key: str = ""
+    default_from: str = ""
+
+
+class SendGridSettings(BaseModel):
+    """SendGrid API settings."""
+
+    api_key: str = ""
+    default_from: str = ""
+
+
 class MemorySettings(BaseModel):
     """Local memory module settings."""
 
@@ -48,6 +62,8 @@ class AITSettings(BaseModel):
     general: GeneralSettings = Field(default_factory=GeneralSettings)
     google: GoogleSettings = Field(default_factory=GoogleSettings)
     xai: XAISettings = Field(default_factory=XAISettings)
+    resend: ResendSettings = Field(default_factory=ResendSettings)
+    sendgrid: SendGridSettings = Field(default_factory=SendGridSettings)
     memory: MemorySettings = Field(default_factory=MemorySettings)
 
 

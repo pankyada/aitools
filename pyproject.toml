@@ -16,8 +16,11 @@ dependencies = [
   "ait-core>=0.1.0",
   "ait-gmail>=0.1.0",
   "ait-gdrive>=0.1.0",
+  "ait-gcal>=0.1.0",
   "ait-xai>=0.1.0",
   "ait-memory>=0.1.0",
+  "ait-resend>=0.1.0",
+  "ait-sendgrid>=0.1.0",
 ]
 
 [tool.uv.workspace]
@@ -25,16 +28,22 @@ members = [
   "packages/ait-core",
   "packages/ait-gmail",
   "packages/ait-gdrive",
+  "packages/ait-gcal",
   "packages/ait-xai",
   "packages/ait-memory",
+  "packages/ait-resend",
+  "packages/ait-sendgrid",
 ]
 
 [tool.uv.sources]
 ait-core = { workspace = true }
 ait-gmail = { workspace = true }
 ait-gdrive = { workspace = true }
+ait-gcal = { workspace = true }
 ait-xai = { workspace = true }
 ait-memory = { workspace = true }
+ait-resend = { workspace = true }
+ait-sendgrid = { workspace = true }
 
 [dependency-groups]
 dev = [
@@ -73,7 +82,16 @@ warn_unused_ignores = true
 warn_return_any = true
 strict = false
 ignore_missing_imports = true
-packages = ["ait_core", "ait_xai", "ait_gmail", "ait_gdrive", "ait_memory"]
+packages = [
+  "ait_core",
+  "ait_xai",
+  "ait_gmail",
+  "ait_gdrive",
+  "ait_gcal",
+  "ait_memory",
+  "ait_resend",
+  "ait_sendgrid",
+]
 
 [[tool.mypy.overrides]]
 module = ["ait_core.*"]

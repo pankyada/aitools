@@ -6,7 +6,10 @@ Monorepo for modular CLI tools:
 - `ait-xai`
 - `ait-gmail`
 - `ait-gdrive`
+- `ait-gcal`
 - `ait-memory`
+- `ait-resend`
+- `ait-sendgrid`
 
 ## Development
 
