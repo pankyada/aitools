@@ -32,4 +32,4 @@ jobs:
         run: uv run pytest tests/ --cov=packages/ait-core/src/ait_core --cov-fail-under=80
 
       - name: Mypy
-        run: uv run mypy packages/ait-core/src/ait_core packages/ait-xai/src/ait_xai packages/ait-gmail/src/ait_gmail packages/ait-gdrive/src/ait_gdrive packages/ait-gcal/src/ait_gcal packages/ait-memory/src/ait_memory packages/ait-resend/src/ait_resend packages/ait-sendgrid/src/ait_sendgrid
+        run: uv run mypy packages/ait-core/src/ait_core packages/ait-xai/src/ait_xai packages/ait-gmail/src/ait_gmail packages/ait-gdrive/src/ait_gdrive packages/ait-gcal/src/ait_gcal packages/ait-memory/src/ait_memory packages/ait-resend/src/ait_resend packages/ait-sendgrid/src/ait_sendgrid packages/ait-social/src/ait_social

@@ -47,6 +47,12 @@ class SendGridSettings(BaseModel):
     default_from: str = ""
 
 
+class SocialSettings(BaseModel):
+    """Social tool defaults."""
+
+    default_platform: str = "twitter"
+
+
 class MemorySettings(BaseModel):
     """Local memory module settings."""
 
@@ -64,6 +70,7 @@ class AITSettings(BaseModel):
     xai: XAISettings = Field(default_factory=XAISettings)
     resend: ResendSettings = Field(default_factory=ResendSettings)
     sendgrid: SendGridSettings = Field(default_factory=SendGridSettings)
+    social: SocialSettings = Field(default_factory=SocialSettings)
     memory: MemorySettings = Field(default_factory=MemorySettings)
 
 

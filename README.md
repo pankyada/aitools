@@ -10,6 +10,7 @@ Monorepo for modular CLI tools:
 - `ait-memory`
 - `ait-resend`
 - `ait-sendgrid`
+- `ait-social`
 
 ## Development
 

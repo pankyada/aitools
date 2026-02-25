@@ -21,6 +21,7 @@ dependencies = [
   "ait-memory>=0.1.0",
   "ait-resend>=0.1.0",
   "ait-sendgrid>=0.1.0",
+  "ait-social>=0.1.0",
 ]
 
 [tool.uv.workspace]
@@ -33,6 +34,7 @@ members = [
   "packages/ait-memory",
   "packages/ait-resend",
   "packages/ait-sendgrid",
+  "packages/ait-social",
 ]
 
 [tool.uv.sources]
@@ -44,6 +46,7 @@ ait-xai = { workspace = true }
 ait-memory = { workspace = true }
 ait-resend = { workspace = true }
 ait-sendgrid = { workspace = true }
+ait-social = { workspace = true }
 
 [dependency-groups]
 dev = [
@@ -91,6 +94,7 @@ packages = [
   "ait_memory",
   "ait_resend",
   "ait_sendgrid",
+  "ait_social",
 ]
 
 [[tool.mypy.overrides]]

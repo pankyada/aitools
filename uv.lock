@@ -16,6 +16,7 @@ members = [
     "ait-memory",
     "ait-resend",
     "ait-sendgrid",
+    "ait-social",
     "ait-xai",
 ]
 
@@ -31,6 +32,7 @@ dependencies = [
     { name = "ait-memory" },
     { name = "ait-resend" },
     { name = "ait-sendgrid" },
+    { name = "ait-social" },
     { name = "ait-xai" },
 ]
 
@@ -55,6 +57,7 @@ requires-dist = [
     { name = "ait-memory", editable = "packages/ait-memory" },
     { name = "ait-resend", editable = "packages/ait-resend" },
     { name = "ait-sendgrid", editable = "packages/ait-sendgrid" },
+    { name = "ait-social", editable = "packages/ait-social" },
     { name = "ait-xai", editable = "packages/ait-xai" },
 ]
 
@@ -211,6 +214,27 @@ requires-dist = [
 name = "ait-sendgrid"
 version = "0.1.0"
 source = { editable = "packages/ait-sendgrid" }
+dependencies = [
+    { name = "ait-core" },
+    { name = "httpx" },
+    { name = "pydantic" },
+    { name = "rich" },
+    { name = "typer" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "ait-core", editable = "packages/ait-core" },
+    { name = "httpx", specifier = ">=0.28.1" },
+    { name = "pydantic", specifier = ">=2.10.6" },
+    { name = "rich", specifier = ">=13.9.4" },
+    { name = "typer", specifier = ">=0.15.2" },
+]
+
+[[package]]
+name = "ait-social"
+version = "0.1.0"
+source = { editable = "packages/ait-social" }
 dependencies = [
     { name = "ait-core" },
     { name = "httpx" },
