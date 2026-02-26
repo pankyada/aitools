@@ -22,6 +22,11 @@ jobs:
       - name: Install dependencies
         run: uv sync --all-packages
 
+      - name: Version policy
+        env:
+          BASE_REF: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: uv run python scripts/check_version_policy.py --base-ref "$BASE_REF"
+
       - name: Ruff lint
         run: uv run ruff check .
 
