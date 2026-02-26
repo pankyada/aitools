@@ -19,6 +19,7 @@ from ait_core.output.formatter import (
     make_success_response,
 )
 
+from ait_xai.client import XAIClient
 from ait_xai.commands.chat import resolve_prompt, run_chat, run_chat_interactive
 from ait_xai.commands.imagegen import run_image
 from ait_xai.commands.videogen import run_video
@@ -118,6 +119,57 @@ def auth_status(output: OutputMode = typer.Option("json", "--output", "-o")) -> 
         raise typer.Exit(code=getattr(exc, "exit_code", ExitCode.GENERAL_ERROR)) from exc
 
 
+@app.command("models")
+def models(
+    type: str = typer.Option(
+        "image",
+        "--type",
+        "-t",
+        help="Model list type: image|video|language|all",
+    ),
+    output: OutputMode = typer.Option("json", "--output", "-o"),
+) -> None:
+    """List available xAI models by type.
+
+    Examples:
+        ait-xai models --type image
+        ait-xai models --type video
+        ait-xai models --type language
+        ait-xai models --type all
+    """
+
+    start = command_timer()
+    try:
+        settings = load_settings()
+        client = XAIClient(settings=settings)
+        type_value = type.lower().strip()
+
+        if type_value not in {"image", "video", "language", "all"}:
+            raise ToolsetError(
+                code=ErrorCode.INVALID_INPUT,
+                message="Invalid type. Use image, video, language, or all.",
+                exit_code=ExitCode.INVALID_INPUT,
+            )
+
+        payload = asyncio.run(client.list_models("/models"))
+        if type_value != "all":
+            data = payload.get("data", [])
+            if type_value == "image":
+                filtered = [m for m in data if "image" in m.get("id", "") or "imagine" in m.get("id", "")]
+            elif type_value == "video":
+                filtered = [m for m in data if "video" in m.get("id", "")]
+            else:
+                filtered = [m for m in data if "image" not in m.get("id", "") and "imagine" not in m.get("id", "") and "video" not in m.get("id", "")]
+            payload = {"data": filtered}
+
+        response = make_success_response("ait-xai", "models", payload, start)
+        _print_response(output, response)
+    except Exception as exc:
+        response = make_error_response("ait-xai", "models", start, exc)
+        _print_response(output, response)
+        raise typer.Exit(code=getattr(exc, "exit_code", ExitCode.GENERAL_ERROR)) from exc
+
+
 @app.command("chat")
 def chat(
     prompt: str | None = typer.Option(None, "--prompt", help="Direct prompt text"),
@@ -181,7 +233,7 @@ def chat(
 def image(
     prompt: str = typer.Argument(..., help="Prompt text"),
     output_path: Path | None = typer.Option(None, "--output", help="Write image to file"),
-    size: str = typer.Option("1024x1024", "--size", help="Image size"),
+    size: str | None = typer.Option(None, "--size", help="Image size (omit if unsupported)"),
     model: str | None = typer.Option(None, "--model", help="Model override"),
     num: int = typer.Option(1, "--num", help="Number of images"),
     out_format: OutputMode = typer.Option("json", "--format", "-o", help="Output format"),

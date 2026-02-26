@@ -36,7 +36,7 @@ class ImageRequest(BaseModel):
 
     model: str
     prompt: str
-    size: str = "1024x1024"
+    size: str | None = None
     n: int = Field(default=1, ge=1, le=10)
 
 

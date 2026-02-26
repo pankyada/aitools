@@ -14,7 +14,7 @@ async def run_image(
     settings: AITSettings,
     prompt: str,
     output: Path | None,
-    size: str,
+    size: str | None,
     model: str | None,
     num: int,
 ) -> dict[str, object]:

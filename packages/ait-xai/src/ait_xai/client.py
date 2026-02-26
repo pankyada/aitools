@@ -203,6 +203,29 @@ class XAIClient:
             output_url=data.get("output_url") or data.get("url"),
         )
 
+    async def list_models(self, endpoint: str) -> dict[str, Any]:
+        """List available model metadata from a models endpoint.
+
+        Args:
+            endpoint: Models endpoint path (e.g. "/models").
+
+        Returns:
+            Parsed JSON payload.
+
+        Raises:
+            ToolsetError: If API request fails.
+        """
+
+        response = await request_with_retry(
+            self.client,
+            "GET",
+            f"{BASE_URL}{endpoint}",
+            headers=self._headers(),
+        )
+        if response.status_code >= 400:
+            self._raise_http_error(response)
+        return response.json()
+
     async def save_image_payload(self, image_payload: str, output: Path) -> Path:
         """Save base64 payload or URL content to disk.
 
