@@ -1,0 +1,62 @@
+name: Release Main
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-main
+  cancel-in-progress: false
+
+jobs:
+  release-main:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Build distributions
+        run: |
+          uv build
+          for pkg in packages/ait-core packages/ait-xai packages/ait-gmail packages/ait-gdrive packages/ait-gcal packages/ait-memory packages/ait-resend packages/ait-sendgrid packages/ait-social; do
+            (cd "$pkg" && uv build)
+          done
+
+      - name: Generate checksums
+        run: |
+          find . -type f \( -name "*.whl" -o -name "*.tar.gz" \) -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS
+
+      - name: Compute release metadata
+        id: meta
+        run: |
+          short_sha="${GITHUB_SHA::7}"
+          echo "tag=main-${short_sha}" >> "$GITHUB_OUTPUT"
+          echo "name=main-${short_sha}" >> "$GITHUB_OUTPUT"
+
+      - name: Publish prerelease for main commit
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.meta.outputs.tag }}
+          name: ${{ steps.meta.outputs.name }}
+          target_commitish: ${{ github.sha }}
+          prerelease: true
+          make_latest: false
+          generate_release_notes: true
+          files: |
+            dist/*
+            packages/**/dist/*
+            SHA256SUMS
