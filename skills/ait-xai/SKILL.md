@@ -27,6 +27,8 @@ ait-xai chat --stdin --system "Extract action items"
 ait-xai chat --prompt-file /tmp/input.txt --json-mode
 ait-xai chat --interactive
 
+ait-xai models --type image
+
 ait-xai image "A modern office in morning light" --num 1
 ait-xai video "A drone shot over mountains" --duration 8
 ```
