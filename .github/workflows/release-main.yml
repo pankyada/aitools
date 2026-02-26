@@ -43,9 +43,16 @@ jobs:
       - name: Compute release metadata
         id: meta
         run: |
+          version=$(python - <<'PY'
+          import tomllib
+          from pathlib import Path
+          data = tomllib.loads(Path("pyproject.toml").read_text(encoding="utf-8"))
+          print(data["project"]["version"])
+          PY
+          )
           short_sha="${GITHUB_SHA::7}"
-          echo "tag=main-${short_sha}" >> "$GITHUB_OUTPUT"
-          echo "name=main-${short_sha}" >> "$GITHUB_OUTPUT"
+          echo "tag=v${version}-main-${short_sha}" >> "$GITHUB_OUTPUT"
+          echo "name=v${version} (main ${short_sha})" >> "$GITHUB_OUTPUT"
 
       - name: Publish prerelease for main commit
         uses: softprops/action-gh-release@v2
