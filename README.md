@@ -20,6 +20,35 @@ uv run ruff check .
 uv run pytest tests/
 ```
 
+## Install from Releases
+
+Install from GitHub release wheel assets (recommended current path):
+
+```bash
+TAG=v0.1.0
+REPO=pankyada/aitools
+mkdir -p /tmp/aitools
+
+# Download all wheels from a release and install
+gh release download "$TAG" -R "$REPO" -p '*.whl' -D /tmp/aitools
+uv pip install /tmp/aitools/*.whl
+```
+
+Install a single tool wheel:
+
+```bash
+TAG=v0.1.0
+REPO=pankyada/aitools
+mkdir -p /tmp/aitools
+
+gh release download "$TAG" -R "$REPO" -p 'ait_gmail-*.whl' -D /tmp/aitools
+uv pip install /tmp/aitools/ait_gmail-*.whl
+```
+
+For main-branch prereleases, use tags like `v0.1.0-main-<short-sha>`.
+
+Note: `install.sh` expects standalone binary assets on the GitHub Release page. The current binary workflow uploads build artifacts, so wheel-based install is the reliable release-install path.
+
 ## Release Automation
 
 - Every commit pushed to `main` now creates a GitHub prerelease automatically.
