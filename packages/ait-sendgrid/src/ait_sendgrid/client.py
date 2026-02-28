@@ -46,6 +46,11 @@ class SendGridClient:
                 code=ErrorCode.AUTH_ERROR,
                 message="SendGrid API key is not configured",
                 exit_code=ExitCode.AUTH_ERROR,
+                recovery_hints=[
+                    "Run: ait-sendgrid auth set-key",
+                    "Or set sendgrid.api_key in settings.toml",
+                    "Get your key at: https://app.sendgrid.com/settings/api_keys",
+                ],
             )
         self.api_key = api_key
 
@@ -186,9 +191,15 @@ class SendGridClient:
 
         code = ErrorCode.GENERAL_ERROR
         exit_code = ExitCode.GENERAL_ERROR
+        hints: list[str] | None = None
         if response.status_code in {401, 403}:
             code = ErrorCode.AUTH_ERROR
             exit_code = ExitCode.AUTH_ERROR
+            hints = [
+                "Your SendGrid API key may be invalid or revoked",
+                "Run: ait-sendgrid auth set-key  to update it",
+                "Check your keys at: https://app.sendgrid.com/settings/api_keys",
+            ]
         elif response.status_code == 404:
             code = ErrorCode.NOT_FOUND
             exit_code = ExitCode.NOT_FOUND
@@ -207,4 +218,5 @@ class SendGridClient:
             message=f"SendGrid API request failed ({response.status_code})",
             exit_code=exit_code,
             details={"body": body},
+            recovery_hints=hints,
         )

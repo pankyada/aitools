@@ -47,6 +47,13 @@ class SendGridSettings(BaseModel):
     default_from: str = ""
 
 
+class StripeSettings(BaseModel):
+    """Stripe API settings."""
+
+    api_key: str = ""
+    stripe_version: str = "2024-06-20"
+
+
 class SocialSettings(BaseModel):
     """Social tool defaults."""
 
@@ -70,6 +77,7 @@ class AITSettings(BaseModel):
     xai: XAISettings = Field(default_factory=XAISettings)
     resend: ResendSettings = Field(default_factory=ResendSettings)
     sendgrid: SendGridSettings = Field(default_factory=SendGridSettings)
+    stripe: StripeSettings = Field(default_factory=StripeSettings)
     social: SocialSettings = Field(default_factory=SocialSettings)
     memory: MemorySettings = Field(default_factory=MemorySettings)
 

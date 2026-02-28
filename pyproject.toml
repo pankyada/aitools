@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "ai-toolset"
-version = "0.1.0"
+version = "1.0.0"
 description = "Modular AI-first CLI toolset for Gmail, Google Drive, xAI, and local memory"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -13,19 +13,22 @@ authors = [
   { name = "AI Toolset Contributors" }
 ]
 dependencies = [
-  "ait-core>=0.1.0",
-  "ait-gmail>=0.1.0",
-  "ait-gdrive>=0.1.0",
-  "ait-gcal>=0.1.0",
-  "ait-xai>=0.1.0",
-  "ait-memory>=0.1.0",
-  "ait-resend>=0.1.0",
-  "ait-sendgrid>=0.1.0",
-  "ait-social>=0.1.0",
+  "ait-cli>=1.0.0",
+  "ait-core>=1.0.0",
+  "ait-gmail>=1.0.0",
+  "ait-gdrive>=1.0.0",
+  "ait-gcal>=1.0.0",
+  "ait-xai>=1.0.0",
+  "ait-memory>=1.0.0",
+  "ait-resend>=1.0.0",
+  "ait-sendgrid>=1.0.0",
+  "ait-social>=1.0.0",
+  "ait-stripe>=1.0.0",
 ]
 
 [tool.uv.workspace]
 members = [
+  "packages/ait-cli",
   "packages/ait-core",
   "packages/ait-gmail",
   "packages/ait-gdrive",
@@ -35,9 +38,11 @@ members = [
   "packages/ait-resend",
   "packages/ait-sendgrid",
   "packages/ait-social",
+  "packages/ait-stripe",
 ]
 
 [tool.uv.sources]
+ait-cli = { workspace = true }
 ait-core = { workspace = true }
 ait-gmail = { workspace = true }
 ait-gdrive = { workspace = true }
@@ -47,6 +52,7 @@ ait-memory = { workspace = true }
 ait-resend = { workspace = true }
 ait-sendgrid = { workspace = true }
 ait-social = { workspace = true }
+ait-stripe = { workspace = true }
 
 [dependency-groups]
 dev = [
@@ -86,6 +92,7 @@ warn_return_any = true
 strict = false
 ignore_missing_imports = true
 packages = [
+  "ait_cli",
   "ait_core",
   "ait_xai",
   "ait_gmail",
@@ -95,6 +102,7 @@ packages = [
   "ait_resend",
   "ait_sendgrid",
   "ait_social",
+  "ait_stripe",
 ]
 
 [[tool.mypy.overrides]]

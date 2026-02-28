@@ -3,25 +3,23 @@ requires = ["hatchling>=1.25.0"]
 build-backend = "hatchling.build"
 
 [project]
-name = "ait-sendgrid"
+name = "ait-cli"
 version = "1.0.0"
-description = "SendGrid API CLI tools"
+description = "Unified umbrella CLI for the AI Toolset — the `ait` command"
 readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "MIT" }
+authors = [
+  { name = "AI Toolset Contributors" }
+]
 dependencies = [
   "ait-core>=1.0.0",
-  "httpx>=0.28.1",
-  "pydantic>=2.10.6",
   "typer>=0.15.2",
   "rich>=13.9.4",
 ]
 
 [project.scripts]
-ait-sendgrid = "ait_sendgrid.cli:app"
-
-[project.entry-points."ait.tools"]
-sendgrid = "ait_sendgrid.cli:app"
+ait = "ait_cli.cli:app"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/ait_sendgrid"]
+packages = ["src/ait_cli"]

@@ -41,6 +41,7 @@ class ToolsetError(Exception):
         message: Human-readable failure description.
         exit_code: Process exit code for CLI processes.
         details: Optional structured details for debugging/consumers.
+        recovery_hints: Optional ordered list of actionable fix suggestions.
 
     Returns:
         None.
@@ -53,6 +54,7 @@ class ToolsetError(Exception):
     message: str
     exit_code: ExitCode = ExitCode.GENERAL_ERROR
     details: dict[str, object] | None = None
+    recovery_hints: list[str] | None = None
 
     def to_payload(self) -> dict[str, object]:
         """Serialize the error to JSON-compatible dict.
@@ -70,4 +72,6 @@ class ToolsetError(Exception):
         payload: dict[str, object] = {"code": self.code.value, "message": self.message}
         if self.details:
             payload["details"] = self.details
+        if self.recovery_hints:
+            payload["hints"] = self.recovery_hints
         return payload

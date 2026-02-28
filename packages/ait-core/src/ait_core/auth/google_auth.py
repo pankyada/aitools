@@ -69,6 +69,11 @@ class GoogleAuthClient:
                 code=ErrorCode.AUTH_ERROR,
                 message="Google client_id/client_secret are not configured",
                 exit_code=ExitCode.AUTH_ERROR,
+                recovery_hints=[
+                    "Set google.client_id and google.client_secret in settings.toml",
+                    "Create OAuth credentials at: https://console.cloud.google.com/apis/credentials",
+                    "Choose 'Desktop app' as the application type when creating credentials",
+                ],
             )
 
     async def request_device_code(self, scopes: list[str]) -> DeviceCodeResponse:
@@ -97,12 +102,20 @@ class GoogleAuthClient:
                 code=ErrorCode.AUTH_ERROR,
                 message=f"Google device-code request failed: {exc.response.text}",
                 exit_code=ExitCode.AUTH_ERROR,
+                recovery_hints=[
+                    "Verify your google.client_id is correct in settings.toml",
+                    "Ensure your OAuth app is enabled at: https://console.cloud.google.com/apis/credentials",
+                ],
             ) from exc
         except httpx.HTTPError as exc:
             raise ToolsetError(
                 code=ErrorCode.NETWORK_ERROR,
                 message=f"Network error requesting device code: {exc}",
                 exit_code=ExitCode.GENERAL_ERROR,
+                recovery_hints=[
+                    "Check your internet connection",
+                    "Google OAuth endpoints may be temporarily unavailable — try again shortly",
+                ],
             ) from exc
 
     def _scope_key(self, scopes: list[str]) -> str:
@@ -168,24 +181,40 @@ class GoogleAuthClient:
                     code=ErrorCode.AUTH_ERROR,
                     message="Google authorization was denied by the user",
                     exit_code=ExitCode.AUTH_ERROR,
+                    recovery_hints=[
+                        "Re-run the login command and click 'Allow' when prompted in the browser",
+                        "Make sure you are signing in with the correct Google account",
+                    ],
                 )
             if error_value == "expired_token":
                 raise ToolsetError(
                     code=ErrorCode.AUTH_EXPIRED,
                     message="Google device code expired before authorization completed",
                     exit_code=ExitCode.AUTH_ERROR,
+                    recovery_hints=[
+                        "Re-run the login command and complete authorization in the browser promptly",
+                        "You have a limited window after the code is shown to approve the request",
+                    ],
                 )
 
             raise ToolsetError(
                 code=ErrorCode.AUTH_ERROR,
                 message=f"Google token polling failed: {data}",
                 exit_code=ExitCode.AUTH_ERROR,
+                recovery_hints=[
+                    "Re-run the login command to start a new authorization flow",
+                    "Verify your OAuth app configuration at: https://console.cloud.google.com/apis/credentials",
+                ],
             )
 
         raise ToolsetError(
             code=ErrorCode.AUTH_EXPIRED,
             message="Timed out waiting for Google device authorization",
             exit_code=ExitCode.AUTH_ERROR,
+            recovery_hints=[
+                "Re-run the login command and approve it in the browser more quickly",
+                "The device code window is limited — complete authorization within the time shown",
+            ],
         )
 
     async def login_device_flow(self, scopes: list[str]) -> DeviceCodeResponse:
@@ -255,6 +284,10 @@ class GoogleAuthClient:
                 code=ErrorCode.AUTH_ERROR,
                 message="No stored Google token for requested scopes",
                 exit_code=ExitCode.AUTH_ERROR,
+                recovery_hints=[
+                    "Run the login command for this tool to authorize your Google account",
+                    "Example: ait-gmail auth login",
+                ],
             )
 
         refresh_token = bundle.get("refresh_token")
@@ -263,6 +296,10 @@ class GoogleAuthClient:
                 code=ErrorCode.AUTH_EXPIRED,
                 message="Stored Google token does not include a refresh token",
                 exit_code=ExitCode.AUTH_ERROR,
+                recovery_hints=[
+                    "Re-run the login command to obtain a fresh token with offline access",
+                    "Example: ait-gmail auth login  (ensure offline_access scope is requested)",
+                ],
             )
 
         payload = {
@@ -279,6 +316,11 @@ class GoogleAuthClient:
                 code=ErrorCode.AUTH_EXPIRED,
                 message=f"Google token refresh failed: {exc.response.text}",
                 exit_code=ExitCode.AUTH_ERROR,
+                recovery_hints=[
+                    "Re-run the login command to re-authorize your Google account",
+                    "Check that your OAuth app is still enabled at: https://console.cloud.google.com/apis/credentials",
+                    "Revoke and re-grant access at: https://myaccount.google.com/permissions",
+                ],
             ) from exc
 
         updated = response.json()
@@ -308,6 +350,10 @@ class GoogleAuthClient:
                 code=ErrorCode.AUTH_ERROR,
                 message="Google auth not configured for requested scopes",
                 exit_code=ExitCode.AUTH_ERROR,
+                recovery_hints=[
+                    "Run the login command for this tool to authorize your Google account",
+                    "Example: ait-gmail auth login",
+                ],
             )
 
         access_token = bundle.get("access_token")
@@ -317,6 +363,10 @@ class GoogleAuthClient:
                 code=ErrorCode.AUTH_EXPIRED,
                 message="Stored Google token payload is invalid",
                 exit_code=ExitCode.AUTH_ERROR,
+                recovery_hints=[
+                    "Log out and log back in to replace the corrupted token",
+                    "Example: ait-gmail auth logout  then  ait-gmail auth login",
+                ],
             )
 
         expires_at = datetime.fromisoformat(expires_at_raw)
@@ -331,6 +381,10 @@ class GoogleAuthClient:
                     code=ErrorCode.AUTH_EXPIRED,
                     message="Google token refresh returned invalid access token",
                     exit_code=ExitCode.AUTH_ERROR,
+                    recovery_hints=[
+                        "Log out and log back in to obtain a clean token",
+                        "Example: ait-gmail auth logout  then  ait-gmail auth login",
+                    ],
                 )
             return refreshed_token
 
