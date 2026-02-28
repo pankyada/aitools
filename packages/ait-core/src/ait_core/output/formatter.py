@@ -11,6 +11,7 @@ from typing import Any, Literal
 from rich.console import Console
 from rich.panel import Panel
 from rich.pretty import Pretty
+from rich.text import Text
 
 from ait_core.errors import ToolsetError
 
@@ -176,7 +177,11 @@ def _format_plain(response: CommandResponse) -> str:
     lines: list[str] = [f"success\t{response.success}"]
     if response.error:
         for key, value in response.error.items():
-            lines.append(f"error_{key}\t{value}")
+            if key == "hints" and isinstance(value, list):
+                for i, hint in enumerate(value):
+                    lines.append(f"error_hint_{i + 1}\t{hint}")
+            else:
+                lines.append(f"error_{key}\t{value}")
 
     if isinstance(response.data, dict):
         for key, value in response.data.items():
@@ -185,6 +190,39 @@ def _format_plain(response: CommandResponse) -> str:
         lines.append(f"items\t{len(response.data)}")
 
     return "\n".join(lines)
+
+
+def _render_rich_error(
+    rich_console: Console, response: CommandResponse
+) -> None:
+    """Render an error response with hints in rich format.
+
+    Args:
+        rich_console: Rich console to print to.
+        response: Failed command response.
+
+    Returns:
+        None.
+
+    Raises:
+        None.
+    """
+
+    error = response.error or {}
+    message = error.get("message", "An unexpected error occurred")
+    hints: list[str] = error.get("hints", [])  # type: ignore[assignment]
+
+    body = Text()
+    body.append("✗ ", style="bold red")
+    body.append(str(message), style="red")
+
+    if hints:
+        body.append("\n\n")
+        body.append("💡 How to fix:\n", style="bold yellow")
+        for i, hint in enumerate(hints, 1):
+            body.append(f"   {i}. {hint}\n", style="yellow")
+
+    rich_console.print(Panel(body, title="[bold red]Error[/bold red]", border_style="red"))
 
 
 def format_output(
@@ -210,7 +248,9 @@ def format_output(
         return _format_plain(response)
     if mode == "rich":
         rich_console = console or Console()
-        title = "Success" if response.success else "Error"
-        rich_console.print(Panel(Pretty(response.to_dict()), title=title))
+        if not response.success:
+            _render_rich_error(rich_console, response)
+        else:
+            rich_console.print(Panel(Pretty(response.to_dict()), title="[bold green]Success[/bold green]", border_style="green"))
         return ""
     raise ValueError(f"Unsupported output mode: {mode}")

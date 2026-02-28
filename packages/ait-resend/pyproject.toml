@@ -4,13 +4,13 @@ build-backend = "hatchling.build"
 
 [project]
 name = "ait-resend"
-version = "0.1.0"
+version = "1.0.0"
 description = "Resend API CLI tools"
 readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "MIT" }
 dependencies = [
-  "ait-core>=0.1.0",
+  "ait-core>=1.0.0",
   "httpx>=0.28.1",
   "pydantic>=2.10.6",
   "typer>=0.15.2",
@@ -19,6 +19,9 @@ dependencies = [
 
 [project.scripts]
 ait-resend = "ait_resend.cli:app"
+
+[project.entry-points."ait.tools"]
+resend = "ait_resend.cli:app"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/ait_resend"]

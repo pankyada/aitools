@@ -56,6 +56,11 @@ class XAIClient:
                 code=ErrorCode.AUTH_ERROR,
                 message="xAI API key is not configured",
                 exit_code=ExitCode.AUTH_ERROR,
+                recovery_hints=[
+                    "Run: ait-xai auth set-key",
+                    "Or set xai.api_key in settings.toml",
+                    "Get your key at: https://console.x.ai",
+                ],
             )
         self.api_key = api_key
 
@@ -250,9 +255,15 @@ class XAIClient:
 
         code = ErrorCode.GENERAL_ERROR
         exit_code = ExitCode.GENERAL_ERROR
+        hints: list[str] | None = None
         if response.status_code in {401, 403}:
             code = ErrorCode.AUTH_ERROR
             exit_code = ExitCode.AUTH_ERROR
+            hints = [
+                "Your xAI API key may be invalid or revoked",
+                "Run: ait-xai auth set-key  to update it",
+                "Check your keys at: https://console.x.ai",
+            ]
         elif response.status_code == 404:
             code = ErrorCode.NOT_FOUND
             exit_code = ExitCode.NOT_FOUND
@@ -271,4 +282,5 @@ class XAIClient:
             message=f"xAI API request failed ({response.status_code})",
             exit_code=exit_code,
             details={"body": body},
+            recovery_hints=hints,
         )

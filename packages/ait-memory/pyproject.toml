@@ -4,13 +4,13 @@ build-backend = "hatchling.build"
 
 [project]
 name = "ait-memory"
-version = "0.1.0"
+version = "1.0.0"
 description = "Local memory and semantic search tooling"
 readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "MIT" }
 dependencies = [
-  "ait-core>=0.1.0",
+  "ait-core>=1.0.0",
   "pydantic>=2.10.6",
   "typer>=0.15.2",
   "rich>=13.9.4",
@@ -22,6 +22,9 @@ local-embeddings = ["sentence-transformers>=3.4.1"]
 
 [project.scripts]
 ait-memory = "ait_memory.cli:app"
+
+[project.entry-points."ait.tools"]
+memory = "ait_memory.cli:app"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/ait_memory"]

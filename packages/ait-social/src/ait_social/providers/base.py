@@ -98,9 +98,19 @@ class SocialProvider(ABC):
         except ValueError:
             body = response.text
 
+        hints: list[str] | None = None
+        if response.status_code in {401, 403}:
+            platform_slug = provider.lower()
+            hints = [
+                f"Run: ait-social auth set-token --platform {platform_slug}",
+                f"Check that your {provider} token is still valid in the platform's developer portal",
+                "Tokens may expire or be revoked — re-authenticate to obtain a fresh one",
+            ]
+
         raise ToolsetError(
             code=code,
             message=f"{provider} API request failed ({response.status_code})",
             exit_code=exit_code,
             details={"body": body},
+            recovery_hints=hints,
         )

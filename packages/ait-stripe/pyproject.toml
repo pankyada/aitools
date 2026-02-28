@@ -3,9 +3,9 @@ requires = ["hatchling>=1.25.0"]
 build-backend = "hatchling.build"
 
 [project]
-name = "ait-sendgrid"
+name = "ait-stripe"
 version = "1.0.0"
-description = "SendGrid API CLI tools"
+description = "Stripe API CLI tools"
 readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "MIT" }
@@ -18,10 +18,10 @@ dependencies = [
 ]
 
 [project.scripts]
-ait-sendgrid = "ait_sendgrid.cli:app"
+ait-stripe = "ait_stripe.cli:app"
 
 [project.entry-points."ait.tools"]
-sendgrid = "ait_sendgrid.cli:app"
+stripe = "ait_stripe.cli:app"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/ait_sendgrid"]
+packages = ["src/ait_stripe"]

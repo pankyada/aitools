@@ -66,6 +66,11 @@ def get_platform_token(
                 f"Use `ait-social auth set-token --platform {platform}`."
             ),
             exit_code=ExitCode.AUTH_ERROR,
+            recovery_hints=[
+                f"Run: ait-social auth set-token --platform {platform}",
+                f"Obtain an access token from the {platform.capitalize()} developer portal",
+                "Example: ait-social auth set-token --platform instagram",
+            ],
         )
     return token
 

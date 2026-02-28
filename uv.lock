@@ -9,6 +9,7 @@ resolution-markers = [
 [manifest]
 members = [
     "ai-toolset",
+    "ait-cli",
     "ait-core",
     "ait-gcal",
     "ait-gdrive",
@@ -17,14 +18,16 @@ members = [
     "ait-resend",
     "ait-sendgrid",
     "ait-social",
+    "ait-stripe",
     "ait-xai",
 ]
 
 [[package]]
 name = "ai-toolset"
-version = "0.1.0"
+version = "1.0.0"
 source = { editable = "." }
 dependencies = [
+    { name = "ait-cli" },
     { name = "ait-core" },
     { name = "ait-gcal" },
     { name = "ait-gdrive" },
@@ -33,6 +36,7 @@ dependencies = [
     { name = "ait-resend" },
     { name = "ait-sendgrid" },
     { name = "ait-social" },
+    { name = "ait-stripe" },
     { name = "ait-xai" },
 ]
 
@@ -50,6 +54,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
+    { name = "ait-cli", editable = "packages/ait-cli" },
     { name = "ait-core", editable = "packages/ait-core" },
     { name = "ait-gcal", editable = "packages/ait-gcal" },
     { name = "ait-gdrive", editable = "packages/ait-gdrive" },
@@ -58,6 +63,7 @@ requires-dist = [
     { name = "ait-resend", editable = "packages/ait-resend" },
     { name = "ait-sendgrid", editable = "packages/ait-sendgrid" },
     { name = "ait-social", editable = "packages/ait-social" },
+    { name = "ait-stripe", editable = "packages/ait-stripe" },
     { name = "ait-xai", editable = "packages/ait-xai" },
 ]
 
@@ -74,8 +80,25 @@ dev = [
 ]
 
 [[package]]
+name = "ait-cli"
+version = "1.0.0"
+source = { editable = "packages/ait-cli" }
+dependencies = [
+    { name = "ait-core" },
+    { name = "rich" },
+    { name = "typer" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "ait-core", editable = "packages/ait-core" },
+    { name = "rich", specifier = ">=13.9.4" },
+    { name = "typer", specifier = ">=0.15.2" },
+]
+
+[[package]]
 name = "ait-core"
-version = "0.1.0"
+version = "1.0.0"
 source = { editable = "packages/ait-core" }
 dependencies = [
     { name = "cryptography" },
@@ -100,7 +123,7 @@ requires-dist = [
 
 [[package]]
 name = "ait-gcal"
-version = "0.1.0"
+version = "1.0.0"
 source = { editable = "packages/ait-gcal" }
 dependencies = [
     { name = "ait-core" },
@@ -121,7 +144,7 @@ requires-dist = [
 
 [[package]]
 name = "ait-gdrive"
-version = "0.1.0"
+version = "1.0.0"
 source = { editable = "packages/ait-gdrive" }
 dependencies = [
     { name = "ait-core" },
@@ -142,7 +165,7 @@ requires-dist = [
 
 [[package]]
 name = "ait-gmail"
-version = "0.1.0"
+version = "1.0.0"
 source = { editable = "packages/ait-gmail" }
 dependencies = [
     { name = "ait-core" },
@@ -163,7 +186,7 @@ requires-dist = [
 
 [[package]]
 name = "ait-memory"
-version = "0.1.0"
+version = "1.0.0"
 source = { editable = "packages/ait-memory" }
 dependencies = [
     { name = "ait-core" },
@@ -191,7 +214,7 @@ provides-extras = ["local-embeddings"]
 
 [[package]]
 name = "ait-resend"
-version = "0.1.0"
+version = "1.0.0"
 source = { editable = "packages/ait-resend" }
 dependencies = [
     { name = "ait-core" },
@@ -212,7 +235,7 @@ requires-dist = [
 
 [[package]]
 name = "ait-sendgrid"
-version = "0.1.0"
+version = "1.0.0"
 source = { editable = "packages/ait-sendgrid" }
 dependencies = [
     { name = "ait-core" },
@@ -233,7 +256,7 @@ requires-dist = [
 
 [[package]]
 name = "ait-social"
-version = "0.1.0"
+version = "1.0.0"
 source = { editable = "packages/ait-social" }
 dependencies = [
     { name = "ait-core" },
@@ -253,8 +276,29 @@ requires-dist = [
 ]
 
 [[package]]
+name = "ait-stripe"
+version = "1.0.0"
+source = { editable = "packages/ait-stripe" }
+dependencies = [
+    { name = "ait-core" },
+    { name = "httpx" },
+    { name = "pydantic" },
+    { name = "rich" },
+    { name = "typer" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "ait-core", editable = "packages/ait-core" },
+    { name = "httpx", specifier = ">=0.28.1" },
+    { name = "pydantic", specifier = ">=2.10.6" },
+    { name = "rich", specifier = ">=13.9.4" },
+    { name = "typer", specifier = ">=0.15.2" },
+]
+
+[[package]]
 name = "ait-xai"
-version = "0.1.0"
+version = "1.0.0"
 source = { editable = "packages/ait-xai" }
 dependencies = [
     { name = "ait-core" },
