@@ -6,53 +6,88 @@ on:
       - 'v*'
 
 jobs:
-  release:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+  build:
+    strategy:
+      matrix:
+        include:
+          - os: macos-14       # arm64
+            target: darwin-arm64
+            arch: arm64
+          - os: macos-13       # x64
+            target: darwin-x64
+            arch: x86_64
+          - os: ubuntu-22.04
+            target: linux-x64
+            arch: x86_64
+          - os: ubuntu-22.04-arm
+            target: linux-arm64
+            arch: arm64
 
-      - name: Setup Python
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - name: Setup uv
-        uses: astral-sh/setup-uv@v5
+      - name: Install uv
+        run: pip install uv
 
-      - name: Build distributions
+      - name: Install workspace + PyInstaller
+        run: uv sync --all-packages && uv pip install pyinstaller
+
+      - name: Build binaries
         run: |
-          uv build
-          for pkg in packages/ait-core packages/ait-xai packages/ait-gmail packages/ait-gdrive packages/ait-gcal packages/ait-memory packages/ait-resend packages/ait-sendgrid packages/ait-social; do
-            (cd "$pkg" && uv build)
+          TARGET="${{ matrix.target }}"
+          TOOLS=(gmail gdrive gcal xai memory resend sendgrid social stripe)
+          mkdir -p dist/bin
+
+          for tool in "${TOOLS[@]}"; do
+            module="ait_${tool}.cli"
+            out="dist/bin/ait-${tool}-${TARGET}"
+            echo "Building ${out}..."
+            uv run pyinstaller \
+              --onefile \
+              --name "ait-${tool}-${TARGET}" \
+              --distpath dist/bin \
+              -m "${module}"
+            chmod +x "${out}"
           done
 
-      - name: Generate checksums
-        run: |
-          find . -type f \( -name "*.whl" -o -name "*.tar.gz" \) -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS
+      - name: Upload binaries
+        uses: actions/upload-artifact@v4
+        with:
+          name: binaries-${{ matrix.target }}
+          path: dist/bin/
 
-      - name: Create GitHub release
+  release:
+    needs: build
+    runs-on: ubuntu-22.04
+
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: dist/bin
+          merge-multiple: true
+
+      - name: Generate SHA256SUMS
+        run: |
+          cd dist/bin
+          sha256sum ait-* > SHA256SUMS
+
+      - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          draft: true
           files: |
-            dist/*
-            packages/**/dist/*
-            SHA256SUMS
-
-  trigger-binaries:
-    runs-on: ubuntu-latest
-    needs: release
-    steps:
-      - name: Trigger binary build workflow
-        uses: actions/github-script@v7
-        with:
-          script: |
-            await github.rest.actions.createWorkflowDispatch({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              workflow_id: 'build-binaries.yml',
-              ref: context.ref,
-            });
+            dist/bin/ait-*
+            dist/bin/SHA256SUMS
+            install.sh
