@@ -1,40 +1,48 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-OWNER_REPO="${AIT_REPO:-<owner>/ai-toolset}"
+_bold=$'\033[1m'
+_cyan=$'\033[36m'
+_green=$'\033[32m'
+_reset=$'\033[0m'
+
+log_step() { printf '%s  %s%s\n' "${_cyan}→${_reset}" "$*" ""; }
+log_ok()   { printf '%s  %s\n' "${_green}✓${_reset}" "$*"; }
+
+OWNER_REPO="${AIT_REPO:-pankyada/aitools}"
 VERSION="latest"
 PREFIX="$HOME/.local/bin"
 TOOLS=()
 
+ALL_TOOLS=(gmail gdrive gcal xai memory resend sendgrid social stripe)
+
 usage() {
   cat <<USAGE
-Usage: install.sh [--version vX.Y.Z] [--prefix /path] tool [tool...]
+Usage: install.sh [--version vX.Y.Z] [--prefix /path] [--all] [tool...]
 
-Tools:
-  gmail gdrive gcal xai memory resend sendgrid social
+Tools: ${ALL_TOOLS[*]}
+
+  --all       Install all available tools
+  --version   Release tag (default: latest)
+  --prefix    Install directory (default: ~/.local/bin)
 USAGE
 }
 
+INSTALL_ALL="false"
+
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    --version)
-      VERSION="$2"
-      shift 2
-      ;;
-    --prefix)
-      PREFIX="$2"
-      shift 2
-      ;;
-    -h|--help)
-      usage
-      exit 0
-      ;;
-    *)
-      TOOLS+=("$1")
-      shift
-      ;;
+    --version) VERSION="$2"; shift 2 ;;
+    --prefix) PREFIX="$2"; shift 2 ;;
+    --all) INSTALL_ALL="true"; shift ;;
+    -h|--help) usage; exit 0 ;;
+    *) TOOLS+=("$1"); shift ;;
   esac
 done
+
+if [[ "${INSTALL_ALL}" == "true" ]]; then
+  TOOLS=("${ALL_TOOLS[@]}")
+fi
 
 if [[ ${#TOOLS[@]} -eq 0 ]]; then
   usage
@@ -69,6 +77,7 @@ for tool in "${TOOLS[@]}"; do
     resend) binary="ait-resend" ;;
     sendgrid) binary="ait-sendgrid" ;;
     social) binary="ait-social" ;;
+    stripe) binary="ait-stripe" ;;
     *) echo "Unknown tool: $tool"; exit 1 ;;
   esac
 
@@ -91,8 +100,8 @@ for tool in "${TOOLS[@]}"; do
   fi
 
   target="$PREFIX/$binary"
-  echo "Downloading $asset_name"
+  log_step "Downloading $asset_name"
   curl -fsSL "$url" -o "$target"
   chmod +x "$target"
-  echo "Installed $target"
+  log_ok "Installed $target"
 done
